@@ -24,7 +24,7 @@ class GeneralSettingsStateViewModel @Inject constructor(
     sendEvent(GeneralSettingsUiEvent.ShowData(stateRepository.getGeneralSettingsState().data))
   }
 
-  private fun sendEvent(event: GeneralSettingsUiEvent) {
+  fun sendEvent(event: GeneralSettingsUiEvent) {
     reducer.sendEvent(event)
   }
 
