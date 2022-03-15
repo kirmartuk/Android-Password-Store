@@ -1,5 +1,6 @@
-package com.martyuk.compose.viewmodel
+package com.martyuk.compose.reducer
 
+import android.os.Parcelable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -21,4 +22,8 @@ abstract class Reducer<S : UiState, E : UiEvent>(initialVal: S) {
 }
 
 interface UiState
-interface UiEvent
+abstract class UiEvent: Parcelable {
+  companion object {
+    const val name = "UiEvent"
+  }
+}

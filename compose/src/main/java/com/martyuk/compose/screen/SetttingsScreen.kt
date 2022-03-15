@@ -1,4 +1,4 @@
-package com.martyuk.compose
+package com.martyuk.compose.screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -20,7 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.martyuk.compose.screen.Screen
+import com.martyuk.compose.R
 import com.martyuk.compose.ui.theme.APSTheme
 
 @Composable
@@ -53,11 +53,11 @@ fun Settings(navController: NavController) {
           SubScreen(title = stringResource(id = R.string.pref_category_passwords_title),
             icon = painterResource(id = R.drawable.ic_lock_open_24px),
             navController,
-            Screen.GeneralSettings)
+            Screen.PasswordSettings)
           SubScreen(title = stringResource(id = R.string.pref_category_repository_title),
             icon = painterResource(id = R.drawable.ic_call_merge_24px),
             navController,
-            Screen.GeneralSettings)
+            Screen.RepositorySettings)
           SubScreen(
             title = stringResource(id = R.string.pref_category_misc_title),
             icon = painterResource(id = R.drawable.ic_miscellaneous_services_24px),

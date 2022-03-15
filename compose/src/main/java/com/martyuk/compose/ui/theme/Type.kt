@@ -26,3 +26,11 @@ val Typography = Typography(
      fontSize = 12.sp
    )*/
 )
+val Typography2 = androidx.compose.material.Typography(
+  h6 = TextStyle(
+    fontFamily = FontFamily.Default,
+    fontWeight = FontWeight.Normal,
+    fontSize = 16.sp,
+    color = Color.White
+  )
+)

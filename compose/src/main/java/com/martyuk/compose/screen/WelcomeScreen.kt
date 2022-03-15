@@ -1,4 +1,4 @@
-package com.martyuk.compose
+package com.martyuk.compose.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -21,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
 import androidx.navigation.NavController
-import com.martyuk.compose.screen.Screen
+import com.martyuk.compose.R
 import com.martyuk.compose.ui.theme.APSTheme
 import com.martyuk.compose.ui.theme.TitleLarge
 import com.martyuk.compose.utils.asImageBitmap

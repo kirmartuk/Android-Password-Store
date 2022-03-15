@@ -19,34 +19,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.navigation.NavArgument
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.github.androidpasswordstore.autofillparser.BrowserAutofillSupportLevel
 import com.github.androidpasswordstore.autofillparser.getInstalledBrowsersWithAutofillSupportLevel
 import com.martyuk.compose.event.AutoFillSettingsUiEvent
-import com.martyuk.compose.event.GeneralSettingsUiEvent
 import com.martyuk.compose.reducer.AutoFillSettingsReducer
 import com.martyuk.compose.reducer.ReducerFactory
-import com.martyuk.compose.reducer.UpdateAllState
 import com.martyuk.compose.screen.AutoFillSettings
 import com.martyuk.compose.screen.GeneralSettings
 import com.martyuk.compose.screen.Screen
-import com.martyuk.compose.state.AutoFillSettingsSwitchWidget
-import com.martyuk.compose.state.GeneralSettingsItem
-import com.martyuk.compose.state.GeneralSettingsSingleChoiceWidget
 import com.martyuk.compose.ui.theme.APSTheme
 import com.martyuk.compose.utils.DataStoreManager
 import com.martyuk.compose.utils.ResourcesManager
 import com.martyuk.compose.utils.SingleChoiceDialog
 import com.martyuk.compose.utils.UserInputDialog
-import com.martyuk.compose.viewmodel.Reducer
-import com.martyuk.compose.viewmodel.UiEvent
-import com.martyuk.compose.viewmodel.UiState
-import com.martyuk.compose.vo.UserInputDialogVo
+import com.martyuk.compose.reducer.UiEvent
+import com.martyuk.compose.screen.PasswordSettings
+import com.martyuk.compose.screen.RepositorySettingsScreen
+import com.martyuk.compose.screen.Settings
+import com.martyuk.compose.screen.Welcome
+import com.martyuk.compose.widget.TextWithSwitchWidget
+import com.martyuk.formatter.SingleChoiceDialogFormatter
+import com.martyuk.formatter.UserInputDialogFormatter
 import com.martyuk.utils.extensions.PreferenceKeys
 import com.martyuk.utils.extensions.isAutofillServiceEnabled
 import dagger.hilt.android.AndroidEntryPoint
@@ -68,6 +65,9 @@ class MainActivity : ComponentActivity() {
 
   @Inject
   lateinit var singleChoiceDialogFormatter: SingleChoiceDialogFormatter
+
+  @Inject
+  lateinit var userInputDialogFormatter: UserInputDialogFormatter
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContent {
@@ -84,7 +84,14 @@ class MainActivity : ComponentActivity() {
             composable(Screen.AutoFillSettings.name) {
               AutoFillSettings(navController)
             }
+            composable(Screen.PasswordSettings.name) {
+              PasswordSettings(navController)
+            }
+            composable(Screen.RepositorySettings.name) {
+              RepositorySettingsScreen(navController)
+            }
             dialog(Screen.EnableAutoFillDialog.name) {
+              // TODO убрать это дерьмо
               AlertDialog(
                 title = { Text(text = stringResource(id = R.string.pref_autofill_enable_title)) },
                 text = {
@@ -136,8 +143,8 @@ class MainActivity : ComponentActivity() {
                           coroutineScope.launch(Dispatchers.IO) {
                             val autoFillSettingsReducer: AutoFillSettingsReducer =
                               reducerFactory.getReducerByKey(PreferenceKeys.AUTOFILL_ENABLE) as AutoFillSettingsReducer
-                            val item: AutoFillSettingsSwitchWidget =
-                              (autoFillSettingsReducer.state.value.data[PreferenceKeys.AUTOFILL_ENABLE] as AutoFillSettingsSwitchWidget).copy(isEnabled = applicationContext.isAutofillServiceEnabled)
+                            val item: TextWithSwitchWidget =
+                              (autoFillSettingsReducer.state.value.data[PreferenceKeys.AUTOFILL_ENABLE] as TextWithSwitchWidget).copy(isEnabled = applicationContext.isAutofillServiceEnabled)
                             dataStoreManager.setBoolean(PreferenceKeys.AUTOFILL_ENABLE, applicationContext.isAutofillServiceEnabled)
                             autoFillSettingsReducer.sendEvent(
                               AutoFillSettingsUiEvent.Update(
@@ -168,22 +175,32 @@ class MainActivity : ComponentActivity() {
                 navController,
                 vo
               ) {
+                navController.previousBackStackEntry?.arguments?.putParcelable(
+                  UiEvent.name,
+                  singleChoiceDialogFormatter.formatUiEvent(dialogType, vo.title, it)
+                )
+                navController.popBackStack()
                 coroutineScope.launch(Dispatchers.IO) {
                   dataStoreManager.setString(dialogType, it)
-                  runOnUiThread {
-                    navArgument("ads")
-                    navController.currentDestination.addArgument("", NavArgument())
-                    reducerFactory.updateReducerState(dialogType, vo.title, it)
-                  }
                 }
               }
             }
-            dialog(Screen.UserInputDialog.name){
+            dialog(Screen.UserInputDialog.name + "/{id}") { backStackEntry ->
+              val dialogType = backStackEntry.arguments?.getString("id")!!
+              val vo = userInputDialogFormatter.format(dialogType)
+
               UserInputDialog(
                 navController,
-                UserInputDialogVo("add")
-              ){
-
+                vo
+              ) {
+                coroutineScope.launch(Dispatchers.IO) {
+                  dataStoreManager.setString(dialogType, it)
+                }
+                navController.previousBackStackEntry?.arguments?.putParcelable(
+                  UiEvent.name,
+                  userInputDialogFormatter.formatUiEvent(dialogType, vo.title, it)
+                )
+                navController.popBackStack()
               }
             }
           }

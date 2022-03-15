@@ -4,6 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Surface
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.RadioButton
@@ -17,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.martyuk.compose.R
+import com.martyuk.compose.ui.theme.Material2AppTheme
 import com.martyuk.compose.ui.theme.SubTitle
 import com.martyuk.compose.ui.theme.Title
 import com.martyuk.compose.vo.SingleChoiceDialogVo
@@ -34,27 +37,40 @@ fun TextWithSubtitle(title: String, subtitle: String, modifier: Modifier) {
 fun UserInputDialog(
   navController: NavController,
   userInputDialogVo: UserInputDialogVo,
-  setUserInput: (String) -> Unit) {
-  AlertDialog(
-    title = { Text(text = userInputDialogVo.title) },
-    onDismissRequest = {
-      navController.popBackStack()
-    },
-    dismissButton = {
-      TextButton(onClick = {
-        navController.popBackStack()
-      }) {
-        Text(text = stringResource(id = R.string.dialog_cancel))
-      }
-    },
-    confirmButton = {
-      TextButton(onClick = {
-        navController.popBackStack()
-        setUserInput("")
-      }) {
-        Text(text = stringResource(id = R.string.dialog_ok))
-      }
-    })
+  returnUserInput: (String) -> Unit) {
+  val input = remember {
+    mutableStateOf(userInputDialogVo.subtitle)
+  }
+  Material2AppTheme {
+    Surface {
+      AlertDialog(
+        title = {
+          Text(text = userInputDialogVo.title)
+        },
+        text = {
+          OutlinedTextField(value = input.value, onValueChange = {
+            input.value = it
+          })
+        },
+        onDismissRequest = {
+          navController.popBackStack()
+        },
+        dismissButton = {
+          TextButton(onClick = {
+            navController.popBackStack()
+          }) {
+            Text(text = stringResource(id = R.string.dialog_cancel))
+          }
+        },
+        confirmButton = {
+          TextButton(onClick = {
+            returnUserInput(input.value)
+          }) {
+            Text(text = stringResource(id = R.string.dialog_ok))
+          }
+        })
+    }
+  }
 }
 
 @Composable
@@ -83,7 +99,6 @@ fun SingleChoiceDialog(
     },
     confirmButton = {
       TextButton(onClick = {
-        navController.popBackStack()
         setSelectedItem(singleChoiceDialogVo.radioOptions[selectedItemIndex])
       }) {
         Text(text = stringResource(id = R.string.dialog_ok))

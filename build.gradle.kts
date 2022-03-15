@@ -2,7 +2,6 @@
  * Copyright © 2014-2021 The Android Password Store Authors. All Rights Reserved.
  * SPDX-License-Identifier: GPL-3.0-only
  */
-@file:Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 
 buildscript {
   repositories {
@@ -11,7 +10,10 @@ buildscript {
       content { includeModule("com.android.tools", "r8") }
     }
   }
-  dependencies { classpath(libs.build.r8) }
+  dependencies {
+    classpath(libs.build.r8)
+    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
+  }
 }
 
 plugins {

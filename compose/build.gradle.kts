@@ -3,6 +3,7 @@ plugins {
   id("kotlin-android")
   id("kotlin-kapt")
   id("dagger.hilt.android.plugin")
+  id("kotlin-parcelize")
 }
 val composeVersion = "1.0.1"
 val additionalCompilerArgs =
@@ -67,6 +68,7 @@ dependencies {
   implementation(project(mapOf("path" to ":compose-data")))
   implementation(project(mapOf("path" to ":utils")))
   implementation(projects.autofillParser)
+  implementation ("com.google.code.gson:gson:2.9.0")
   implementation("androidx.datastore:datastore:1.0.0")
   implementation("androidx.datastore:datastore-preferences:1.0.0")
   implementation("androidx.hilt:hilt-navigation-compose:1.0.0")

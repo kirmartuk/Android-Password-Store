@@ -2,7 +2,6 @@ package com.martyuk.compose.reducer
 
 import com.martyuk.compose.state.GeneralSettingsState
 import com.martyuk.compose.event.GeneralSettingsUiEvent
-import com.martyuk.compose.viewmodel.Reducer
 import javax.inject.Singleton
 
 @Singleton
@@ -14,8 +13,6 @@ class GeneralSettingsReducer(
     when (event) {
       is GeneralSettingsUiEvent.ShowData -> {
         setState(oldState.copy(data = event.items))
-      }
-      is GeneralSettingsUiEvent.DismissDialog -> {
       }
       is GeneralSettingsUiEvent.Update -> {
         val oldStateItems = oldState.data.toMutableMap()

@@ -58,3 +58,9 @@ include("passgen:random")
 include("sentry-stub")
 
 include("ui-compose")
+
+include(":compose")
+include(":compose-domain")
+include(":compose-data")
+include(":resources")
+include(":utils")

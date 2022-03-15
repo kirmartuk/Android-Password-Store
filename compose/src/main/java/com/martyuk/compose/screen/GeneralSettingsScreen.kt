@@ -27,15 +27,18 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.martyuk.compose.R
-import com.martyuk.compose.state.GeneralSettingsCheckboxWidget
-import com.martyuk.compose.state.GeneralSettingsSingleChoiceWidget
+import com.martyuk.compose.event.GeneralSettingsUiEvent
+import com.martyuk.compose.reducer.UiEvent
 import com.martyuk.compose.state.GeneralSettingsState
 import com.martyuk.compose.ui.theme.APSTheme
 import com.martyuk.compose.ui.theme.SubTitle
 import com.martyuk.compose.ui.theme.Title
 import com.martyuk.compose.utils.TextWithSubtitle
 import com.martyuk.compose.viewmodel.GeneralSettingsStateViewModel
+import com.martyuk.compose.widget.CheckboxWithSubtitleWidget
+import com.martyuk.compose.widget.TextWithSubtitleWidget
 import com.martyuk.utils.extensions.PreferenceKeys
+import com.martyuk.utils.extensions.getParcelableOrNull
 
 @Composable
 fun GeneralSettings(
@@ -59,30 +62,27 @@ fun GeneralSettings(
     ) {
       val generalSettingsState by generalSettingsStateViewModel.state.collectAsState(initial = GeneralSettingsState.initial())
       generalSettingsStateViewModel.showData()
+
+      navController.addOnDestinationChangedListener { _, destination, arguments ->
+        if (destination.route == Screen.GeneralSettings.name) {
+          val event = arguments?.getParcelableOrNull<GeneralSettingsUiEvent>(UiEvent.name)
+          event?.let {
+            generalSettingsStateViewModel.sendEvent(it)
+            arguments.remove(UiEvent.name)
+          }
+        }
+      }
+
       Surface {
         Column(modifier = Modifier
           .fillMaxSize()
         ) {
-          DrawGeneralSettingsScreenWidget(
-            preferenceKey = PreferenceKeys.APP_THEME,
-            generalSettingsState = generalSettingsState,
-            navController = navController)
-          DrawGeneralSettingsScreenWidget(
-            preferenceKey = PreferenceKeys.SORT_ORDER,
-            generalSettingsState = generalSettingsState,
-            navController = navController)
-          DrawGeneralSettingsScreenWidget(
-            preferenceKey = PreferenceKeys.FILTER_RECURSIVELY,
-            generalSettingsState = generalSettingsState,
-            navController = navController)
-          DrawGeneralSettingsScreenWidget(
-            preferenceKey = PreferenceKeys.SEARCH_ON_START,
-            generalSettingsState = generalSettingsState,
-            navController = navController)
-          DrawGeneralSettingsScreenWidget(
-            preferenceKey = PreferenceKeys.SHOW_HIDDEN_CONTENTS,
-            generalSettingsState = generalSettingsState,
-            navController = navController)
+          getScreenItems(Screen.GeneralSettings).forEach {
+            DrawGeneralSettingsScreenWidget(
+              preferenceKey = it,
+              generalSettingsState = generalSettingsState,
+              navController = navController)
+          }
         }
       }
     }
@@ -98,10 +98,10 @@ private fun DrawGeneralSettingsScreenWidget(
 ) {
   when (preferenceKey) {
     PreferenceKeys.APP_THEME, PreferenceKeys.SORT_ORDER -> {
-      (generalSettingsState.data[preferenceKey] as GeneralSettingsSingleChoiceWidget?)?.let { state ->
+      (generalSettingsState.data[preferenceKey] as TextWithSubtitleWidget?)?.let { state ->
         TextWithSubtitle(
           title = state.title,
-          subtitle = state.subTitle,
+          subtitle = state.subtitle,
           modifier = Modifier
             .clickable {
               navController.navigate(Screen.SingleChoiceDialog.name + "/${preferenceKey}")
@@ -112,7 +112,7 @@ private fun DrawGeneralSettingsScreenWidget(
       }
     }
     PreferenceKeys.FILTER_RECURSIVELY, PreferenceKeys.SEARCH_ON_START, PreferenceKeys.SHOW_HIDDEN_CONTENTS -> {
-      (generalSettingsState.data[preferenceKey] as GeneralSettingsCheckboxWidget?)?.let { state ->
+      (generalSettingsState.data[preferenceKey] as CheckboxWithSubtitleWidget?)?.let { state ->
         LabelledCheckbox(
           title = state.title,
           subtitle = state.subTitle,
@@ -124,8 +124,6 @@ private fun DrawGeneralSettingsScreenWidget(
     }
   }
 }
-
-
 
 @Composable
 fun LabelledCheckbox(
