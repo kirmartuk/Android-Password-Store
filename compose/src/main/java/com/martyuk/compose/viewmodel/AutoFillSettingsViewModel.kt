@@ -24,12 +24,14 @@ class AutoFillSettingsViewModel @Inject constructor(
     sendEvent(AutoFillSettingsUiEvent.ShowData(stateRepository.getAutoFillSettingsState().data))
   }
 
-  private fun sendEvent(event: AutoFillSettingsUiEvent) {
+  fun sendEvent(event: AutoFillSettingsUiEvent) {
     reducer.sendEvent(event)
   }
 
-  fun update(event: AutoFillSettingsUiEvent) {
-    sendEvent(event = event)
+  fun setStringToDataStore(key: String, value: Int) {
+    viewModelScope.launch(Dispatchers.IO) {
+      dataStoreManager.setInteger(key, value)
+    }
   }
 
   fun setBooleanToDataStore(key: String, value: Boolean) {

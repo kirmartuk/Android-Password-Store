@@ -2,8 +2,6 @@ package com.martyuk.compose.reducer
 
 import com.martyuk.compose.state.AutoFillSettingsState
 import com.martyuk.compose.event.AutoFillSettingsUiEvent
-import com.martyuk.compose.viewmodel.Reducer
-import dagger.Provides
 import javax.inject.Singleton
 
 @Singleton
@@ -19,8 +17,6 @@ class AutoFillSettingsReducer(autoFillSettingsState: AutoFillSettingsState)
         val oldStateItems = oldState.data.toMutableMap()
         oldStateItems[event.key] = event.value
         setState(oldState.copy(data = oldStateItems))
-      }
-      is AutoFillSettingsUiEvent.DismissDialog -> {
       }
     }
   }

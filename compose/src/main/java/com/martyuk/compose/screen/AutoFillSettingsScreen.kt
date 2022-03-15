@@ -27,15 +27,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.martyuk.compose.R
 import com.martyuk.compose.event.AutoFillSettingsUiEvent
+import com.martyuk.compose.reducer.UiEvent
 import com.martyuk.compose.state.AutoFillSettingsState
-import com.martyuk.compose.state.AutoFillSettingsSwitchWidget
-import com.martyuk.compose.state.AutoFillSettingsTextWithSubtitle
 import com.martyuk.compose.ui.theme.APSTheme
 import com.martyuk.compose.ui.theme.Title
 import com.martyuk.compose.utils.TextWithSubtitle
 import com.martyuk.compose.viewmodel.AutoFillSettingsViewModel
+import com.martyuk.compose.widget.TextWithSubtitleWidget
+import com.martyuk.compose.widget.TextWithSwitchWidget
 import com.martyuk.utils.extensions.PreferenceKeys
 import com.martyuk.utils.extensions.autofillManager
+import com.martyuk.utils.extensions.getParcelableOrNull
 import com.martyuk.utils.extensions.isAutofillServiceEnabled
 
 @Composable
@@ -60,25 +62,28 @@ fun AutoFillSettings(
     ) {
       val autoFillSettingsState by autoFillSettingsViewModel.state.collectAsState(initial = AutoFillSettingsState.initial())
       autoFillSettingsViewModel.showData()
-      navController.addOnDestinationChangedListener { controller, destination, arguments ->
+
+      navController.addOnDestinationChangedListener { _, destination, arguments ->
         if (destination.route == Screen.AutoFillSettings.name) {
-          autoFillSettingsViewModel.
-          arguments.get
+          val event = arguments?.getParcelableOrNull<AutoFillSettingsUiEvent>(UiEvent.name)
+          event?.let {
+            autoFillSettingsViewModel.sendEvent(it)
+            arguments.remove(UiEvent.name)
+          }
         }
       }
+
       Surface {
         Column(modifier = Modifier
           .fillMaxSize()
         ) {
-          DrawAutoFillSettingsWidget(
-            autoFillSettingsState,
-            PreferenceKeys.AUTOFILL_ENABLE,
-            navController
-          )
-          DrawAutoFillSettingsWidget(
-            autoFillSettingsState = autoFillSettingsState,
-            preferenceKey = PreferenceKeys.OREO_AUTOFILL_DIRECTORY_STRUCTURE,
-            navController = navController)
+          getScreenItems(Screen.AutoFillSettings).forEach {
+            DrawAutoFillSettingsWidget(
+              autoFillSettingsState,
+              it,
+              navController
+            )
+          }
         }
       }
     }
@@ -90,17 +95,17 @@ fun DrawAutoFillSettingsWidget(autoFillSettingsState: AutoFillSettingsState, pre
   val context = LocalContext.current
   when (preferenceKey) {
     PreferenceKeys.AUTOFILL_ENABLE -> {
-      (autoFillSettingsState.data[preferenceKey] as AutoFillSettingsSwitchWidget?)?.let { state ->
+      (autoFillSettingsState.data[preferenceKey] as TextWithSwitchWidget?)?.let { state ->
         TextWithSwitch(title = state.title,
           isChecked = state.isEnabled,
           Modifier.clickable {
             if (state.isEnabled) {
               context.autofillManager?.disableAutofillServices()
               autoFillSettingsViewModel.setBooleanToDataStore(preferenceKey, context.isAutofillServiceEnabled)
-              autoFillSettingsViewModel.update(
+              autoFillSettingsViewModel.sendEvent(
                 AutoFillSettingsUiEvent.Update(
                   PreferenceKeys.AUTOFILL_ENABLE,
-                  AutoFillSettingsSwitchWidget(
+                  TextWithSwitchWidget(
                     context.getString(R.string.pref_autofill_enable_title),
                     context.isAutofillServiceEnabled)
                 ))
@@ -111,13 +116,27 @@ fun DrawAutoFillSettingsWidget(autoFillSettingsState: AutoFillSettingsState, pre
       }
     }
     PreferenceKeys.OREO_AUTOFILL_DIRECTORY_STRUCTURE -> {
-      (autoFillSettingsState.data[preferenceKey] as AutoFillSettingsTextWithSubtitle?)?.let { state ->
+      (autoFillSettingsState.data[preferenceKey] as TextWithSubtitleWidget?)?.let { state ->
         TextWithSubtitle(
           title = state.title,
           subtitle = state.subtitle,
           modifier = Modifier
             .clickable {
               navController.navigate(Screen.SingleChoiceDialog.name + "/${preferenceKey}")
+            }
+            .fillMaxWidth()
+            .padding(start = 40.dp, top = 11.dp, bottom = 11.dp)
+        )
+      }
+    }
+    PreferenceKeys.OREO_AUTOFILL_DEFAULT_USERNAME, PreferenceKeys.OREO_AUTOFILL_CUSTOM_PUBLIC_SUFFIXES -> {
+      (autoFillSettingsState.data[preferenceKey] as TextWithSubtitleWidget?)?.let { state ->
+        TextWithSubtitle(
+          title = state.title,
+          subtitle = state.subtitle,
+          modifier = Modifier
+            .clickable {
+              navController.navigate(Screen.UserInputDialog.name + "/${preferenceKey}")
             }
             .fillMaxWidth()
             .padding(start = 40.dp, top = 11.dp, bottom = 11.dp)

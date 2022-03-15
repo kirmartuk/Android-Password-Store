@@ -1,11 +1,12 @@
 package com.martyuk.compose.state
 
 import androidx.compose.runtime.Immutable
-import com.martyuk.compose.viewmodel.UiState
+import com.martyuk.compose.reducer.UiState
+import com.martyuk.compose.widget.WidgetItem
 
 @Immutable
 data class AutoFillSettingsState(
-  val data: Map<String, AutoFillSettingsItem>
+  val data: Map<String, WidgetItem>
 ) : UiState {
 
   companion object {
