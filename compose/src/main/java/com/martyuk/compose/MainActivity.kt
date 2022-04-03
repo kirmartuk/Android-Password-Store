@@ -28,23 +28,25 @@ import com.github.androidpasswordstore.autofillparser.getInstalledBrowsersWithAu
 import com.martyuk.compose.event.AutoFillSettingsUiEvent
 import com.martyuk.compose.reducer.AutoFillSettingsReducer
 import com.martyuk.compose.reducer.ReducerFactory
+import com.martyuk.compose.reducer.UiEvent
 import com.martyuk.compose.screen.AutoFillSettings
 import com.martyuk.compose.screen.GeneralSettings
-import com.martyuk.compose.screen.Screen
-import com.martyuk.compose.ui.theme.APSTheme
-import com.martyuk.compose.utils.DataStoreManager
-import com.martyuk.compose.utils.ResourcesManager
-import com.martyuk.compose.utils.SingleChoiceDialog
-import com.martyuk.compose.utils.UserInputDialog
-import com.martyuk.compose.reducer.UiEvent
 import com.martyuk.compose.screen.PasswordSettings
 import com.martyuk.compose.screen.RepositorySettingsScreen
+import com.martyuk.compose.screen.Screen
 import com.martyuk.compose.screen.Settings
+import com.martyuk.compose.screen.SshKeyGenScreen
 import com.martyuk.compose.screen.Welcome
+import com.martyuk.compose.ui.theme.APSTheme
+import com.martyuk.compose.utils.SingleChoiceDialog
+import com.martyuk.compose.utils.UserInputDialog
 import com.martyuk.compose.widget.TextWithSwitchWidget
+import com.martyuk.compose.widget.WidgetsNames
 import com.martyuk.formatter.SingleChoiceDialogFormatter
 import com.martyuk.formatter.UserInputDialogFormatter
+import com.martyuk.utils.extensions.DataStoreManager
 import com.martyuk.utils.extensions.PreferenceKeys
+import com.martyuk.utils.extensions.ResourcesManager
 import com.martyuk.utils.extensions.isAutofillServiceEnabled
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -144,11 +146,13 @@ class MainActivity : ComponentActivity() {
                             val autoFillSettingsReducer: AutoFillSettingsReducer =
                               reducerFactory.getReducerByKey(PreferenceKeys.AUTOFILL_ENABLE) as AutoFillSettingsReducer
                             val item: TextWithSwitchWidget =
-                              (autoFillSettingsReducer.state.value.data[PreferenceKeys.AUTOFILL_ENABLE] as TextWithSwitchWidget).copy(isEnabled = applicationContext.isAutofillServiceEnabled)
+                              (autoFillSettingsReducer.state.value.data.find { widgetItem ->
+                                widgetItem.widgetName == WidgetsNames.AUTOFILL_SETTINGS_ENABLE_AUTOFILL
+                              }
+                                as TextWithSwitchWidget).copy(isEnabled = applicationContext.isAutofillServiceEnabled)
                             dataStoreManager.setBoolean(PreferenceKeys.AUTOFILL_ENABLE, applicationContext.isAutofillServiceEnabled)
                             autoFillSettingsReducer.sendEvent(
                               AutoFillSettingsUiEvent.Update(
-                                PreferenceKeys.AUTOFILL_ENABLE,
                                 item
                               )
                             )
@@ -202,6 +206,9 @@ class MainActivity : ComponentActivity() {
                 )
                 navController.popBackStack()
               }
+            }
+            composable(Screen.SshKeyGenerator.name) {
+              SshKeyGenScreen(navController)
             }
           }
         }

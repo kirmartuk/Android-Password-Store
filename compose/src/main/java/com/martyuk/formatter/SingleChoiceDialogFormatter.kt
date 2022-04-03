@@ -4,15 +4,15 @@ import com.martyuk.compose.R
 import com.martyuk.compose.event.AutoFillSettingsUiEvent
 import com.martyuk.compose.event.GeneralSettingsUiEvent
 import com.martyuk.compose.event.PasswordSettingsUiEvent
-import com.martyuk.compose.utils.DataStoreManager
-import com.martyuk.compose.utils.ResourcesManager
-import com.martyuk.compose.utils.indexOfOrNull
 import com.martyuk.compose.reducer.UiEvent
+import com.martyuk.compose.utils.indexOfOrNull
 import com.martyuk.compose.vo.SingleChoiceDialogVo
 import com.martyuk.compose.widget.TextWithSubtitleWidget
+import com.martyuk.compose.widget.WidgetsNames
+import com.martyuk.utils.extensions.DataStoreManager
 import com.martyuk.utils.extensions.PreferenceKeys
+import com.martyuk.utils.extensions.ResourcesManager
 import javax.inject.Inject
-import kotlin.Exception
 
 class SingleChoiceDialogFormatter @Inject constructor(
   private val resourcesManager: ResourcesManager,
@@ -61,15 +61,18 @@ class SingleChoiceDialogFormatter @Inject constructor(
   fun formatUiEvent(key: String, title: String, subtitle: String): UiEvent {
     return when (key) {
       PreferenceKeys.OREO_AUTOFILL_DIRECTORY_STRUCTURE -> {
-        AutoFillSettingsUiEvent.Update(key,
-          TextWithSubtitleWidget(title, subtitle)
+        AutoFillSettingsUiEvent.Update(
+          TextWithSubtitleWidget(title, subtitle, widgetName = WidgetsNames.AUTOFILL_SETTINGS_PASSWORD_FILE_ORGANISATION)
         )
       }
-      PreferenceKeys.APP_THEME, PreferenceKeys.SORT_ORDER -> {
-        GeneralSettingsUiEvent.Update(key, TextWithSubtitleWidget(title, subtitle))
+      PreferenceKeys.APP_THEME -> {
+        GeneralSettingsUiEvent.Update(TextWithSubtitleWidget(title, subtitle, widgetName = WidgetsNames.GENERAL_SETTINGS_APP_THEME))
+      }
+      PreferenceKeys.SORT_ORDER -> {
+        GeneralSettingsUiEvent.Update(TextWithSubtitleWidget(title, subtitle, widgetName = WidgetsNames.GENERAL_SETTINGS_SORT_ORDER))
       }
       PreferenceKeys.PREF_KEY_PWGEN_TYPE -> {
-        PasswordSettingsUiEvent.Update(key, TextWithSubtitleWidget(title, subtitle))
+        PasswordSettingsUiEvent.Update(key, TextWithSubtitleWidget(title, subtitle, widgetName = WidgetsNames.PASSWORD_SETTINGS_PASSWORD_GENERATOR_TYPE))
       }
       else -> throw Exception("")
     }

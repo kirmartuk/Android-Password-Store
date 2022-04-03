@@ -10,8 +10,8 @@ import kotlinx.parcelize.RawValue
 sealed class AutoFillSettingsUiEvent : UiEvent() {
 
   @Parcelize
-  data class Update(val key: String, val value: @RawValue WidgetItem) : AutoFillSettingsUiEvent()
+  data class Update(val updatedWidget: @RawValue WidgetItem) : AutoFillSettingsUiEvent()
 
   @Parcelize
-  data class ShowData(val items: @RawValue Map<String, WidgetItem>) : AutoFillSettingsUiEvent()
+  data class ShowData(val items: @RawValue List<WidgetItem>) : AutoFillSettingsUiEvent()
 }

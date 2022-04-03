@@ -10,8 +10,8 @@ import kotlinx.parcelize.RawValue
 sealed class GeneralSettingsUiEvent : UiEvent() {
 
   @Parcelize
-  data class Update(val key: String, val value: @RawValue WidgetItem) : GeneralSettingsUiEvent()
+  data class Update(val updatedWidget: @RawValue WidgetItem) : GeneralSettingsUiEvent()
 
   @Parcelize
-  data class ShowData(val items: @RawValue Map<String, WidgetItem>) : GeneralSettingsUiEvent()
+  data class ShowData(val items: @RawValue List<WidgetItem>) : GeneralSettingsUiEvent()
 }

@@ -2,31 +2,27 @@ package com.martyuk.compose.widget
 
 import android.annotation.SuppressLint
 import android.os.Parcelable
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.LayoutModifier
-import androidx.compose.ui.unit.dp
-import com.martyuk.compose.R
-import com.martyuk.compose.event.AutoFillSettingsUiEvent
-import com.martyuk.compose.screen.LabelledCheckbox
-import com.martyuk.compose.screen.Screen
-import com.martyuk.compose.screen.TextWithSwitch
-import com.martyuk.utils.extensions.PreferenceKeys
-import com.martyuk.utils.extensions.autofillManager
-import com.martyuk.utils.extensions.isAutofillServiceEnabled
+import com.martyuk.compose.utils.CheckboxWithTitleAndSubtitle
+import com.martyuk.compose.utils.TextWithSubtitle
+import com.martyuk.compose.utils.TextWithSwitch
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class TextWithSubtitleWidget(
   val title: String,
-  val subtitle: String
+  val subtitle: String, override val widgetName: String
 ) : WidgetItem, Parcelable {
+
   @SuppressLint("ComposableNaming")
   @Composable
   override fun draw(modifier: Modifier, changeStateInDataStore: (Any) -> Unit) {
-    //
+    TextWithSubtitle(
+      title = title,
+      subtitle = subtitle,
+      modifier = modifier
+    )
   }
 }
 
@@ -34,24 +30,24 @@ data class TextWithSubtitleWidget(
 data class CheckboxWithSubtitleWidget(
   val title: String,
   val subTitle: String,
-  val isSelected: Boolean
+  val isSelected: Boolean, override val widgetName: String
 ) : WidgetItem, Parcelable {
 
   @SuppressLint("ComposableNaming")
   @Composable
   override fun draw(modifier: Modifier, changeStateInDataStore: (Any) -> Unit) {
-    LabelledCheckbox(
+    CheckboxWithTitleAndSubtitle(
       title = title,
       subtitle = subTitle,
       isSelected = isSelected,
-      modifier = modifier, changeStateInDataStore = changeStateInDataStore)
+      modifier = modifier, stateClickListener = changeStateInDataStore)
   }
 }
 
 @Parcelize
 data class TextWithSwitchWidget(
   val title: String,
-  val isEnabled: Boolean
+  val isEnabled: Boolean, override val widgetName: String
 ) : WidgetItem, Parcelable {
 
   @Composable
@@ -65,7 +61,27 @@ data class TextWithSwitchWidget(
 
 interface WidgetItem {
 
+  val widgetName: String
+
   @SuppressLint("ComposableNaming")
   @Composable
   fun draw(modifier: Modifier, changeStateInDataStore: (Any) -> Unit)
+}
+
+object WidgetsNames {
+
+  const val AUTOFILL_SETTINGS_ENABLE_AUTOFILL = "autoFillSettingsEnableAutoFill"
+  const val AUTOFILL_SETTINGS_PASSWORD_FILE_ORGANISATION = "autoFillSettingsPasswordFileOrganisation"
+  const val AUTOFILL_SETTINGS_DEFAULT_USERNAME = "autoFillSettingsUsername"
+  const val AUTOFILL_SETTINGS_CUSTOM_DOMAINS = "autoFillSettingsCustomDomains"
+  const val PASSWORD_SETTINGS_PASSWORD_GENERATOR_TYPE = "passwordSettingsPasswordGeneratorType"
+  const val PASSWORD_SETTINGS_COPY_TIMEOUT = "passwordSettingsCopyTimeout"
+  const val PASSWORD_SETTINGS_COPY_ON_DECRYPT = "passwordSettingsCopyOnDecrypt"
+  const val GENERAL_SETTINGS_APP_THEME = "generalSettingsAppTheme"
+  const val GENERAL_SETTINGS_SORT_ORDER = "generalSettingsSortOrder"
+  const val GENERAL_SETTINGS_FILTER_RECURSIVELY = "generalSettingsFilterRecursively"
+  const val GENERAL_SETTINGS_SEARCH_ON_START = "generalSettingsSearchOnStart"
+  const val GENERAL_SETTINGS_SHOW_HIDDEN_CONTENTS = "generalSettingsShowHiddenContents"
+  const val REPOSITORY_SETTINGS_REBASE_ON_PULL = "RepositorySettingsRebaseOnPull"
+  const val REPOSITORY_SETTINGS_SSH_KEYGEN = "RepositorySettingsSshKeygen"
 }

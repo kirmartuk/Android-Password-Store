@@ -6,13 +6,13 @@ import com.martyuk.compose.widget.WidgetItem
 
 @Immutable
 data class GeneralSettingsState(
-  val data: Map<String, WidgetItem>
+  val data: List<WidgetItem>
 ) : UiState {
 
   companion object {
 
     fun initial(): GeneralSettingsState {
-      return GeneralSettingsState(emptyMap())
+      return GeneralSettingsState(emptyList())
     }
   }
 }

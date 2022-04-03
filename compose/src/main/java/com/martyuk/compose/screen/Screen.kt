@@ -9,6 +9,7 @@ enum class Screen {
   AutoFillSettings,
   PasswordSettings,
   RepositorySettings,
+  SshKeyGenerator,
   EnableAutoFillDialog,
   SingleChoiceDialog,
   UserInputDialog

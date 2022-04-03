@@ -6,13 +6,13 @@ import com.martyuk.compose.widget.WidgetItem
 
 @Immutable
 data class AutoFillSettingsState(
-  val data: Map<String, WidgetItem>
+  val data: List<WidgetItem>
 ) : UiState {
 
   companion object {
 
     fun initial(): AutoFillSettingsState {
-      return AutoFillSettingsState(emptyMap())
+      return AutoFillSettingsState(emptyList())
     }
   }
 }
