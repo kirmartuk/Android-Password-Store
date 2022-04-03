@@ -9,8 +9,8 @@ import kotlinx.parcelize.RawValue
 @Immutable
 sealed class PasswordSettingsUiEvent : UiEvent() {
   @Parcelize
-  data class Update(val key: String, val value: @RawValue WidgetItem) : PasswordSettingsUiEvent()
+  data class Update(val updatedWidget: @RawValue WidgetItem) : PasswordSettingsUiEvent()
 
   @Parcelize
-  data class ShowData(val items: @RawValue Map<String, WidgetItem>) : PasswordSettingsUiEvent()
+  data class ShowData(val items: @RawValue List<WidgetItem>) : PasswordSettingsUiEvent()
 }

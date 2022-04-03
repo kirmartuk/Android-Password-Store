@@ -25,11 +25,10 @@ import com.martyuk.compose.event.PasswordSettingsUiEvent
 import com.martyuk.compose.reducer.UiEvent
 import com.martyuk.compose.state.PasswordSettingsState
 import com.martyuk.compose.ui.theme.APSTheme
-import com.martyuk.compose.utils.TextWithSubtitle
+import com.martyuk.compose.utils.toPreferenceKey
 import com.martyuk.compose.viewmodel.PasswordSettingsStateViewModel
-import com.martyuk.compose.widget.CheckboxWithSubtitleWidget
-import com.martyuk.compose.widget.TextWithSubtitleWidget
-import com.martyuk.utils.extensions.PreferenceKeys
+import com.martyuk.compose.widget.WidgetItem
+import com.martyuk.compose.widget.WidgetsNames
 import com.martyuk.utils.extensions.getParcelableOrNull
 
 @Composable
@@ -42,7 +41,7 @@ fun PasswordSettings(
       topBar = {
         SmallTopAppBar(
           title = {
-            Text(text = stringResource(id = R.string.pref_category_general_title))
+            Text(text = stringResource(id = R.string.pref_category_passwords_title))
           },
           navigationIcon = {
             Icon(imageVector = Icons.Filled.ArrowBack,
@@ -69,10 +68,9 @@ fun PasswordSettings(
         Column(modifier = Modifier
           .fillMaxSize()
         ) {
-          getScreenItems(Screen.PasswordSettings).forEach {
+          passwordSettingsState.data.forEach {
             DrawPasswordSettingsScreenWidget(
-              preferenceKey = it,
-              passwordSettingsState = passwordSettingsState,
+              widgetItem = it,
               navController = navController)
           }
         }
@@ -83,45 +81,30 @@ fun PasswordSettings(
 
 @Composable
 fun DrawPasswordSettingsScreenWidget(
-  preferenceKey: String,
-  passwordSettingsState: PasswordSettingsState,
+  widgetItem: WidgetItem,
   navController: NavController,
   passwordSettingsStateViewModel: PasswordSettingsStateViewModel = hiltViewModel()
 ) {
-  when (preferenceKey) {
-    PreferenceKeys.PREF_KEY_PWGEN_TYPE -> {
-      (passwordSettingsState.data[preferenceKey] as TextWithSubtitleWidget?)?.let { state ->
-        TextWithSubtitle(
-          title = state.title,
-          subtitle = state.subtitle,
-          modifier = Modifier
-            .clickable {
-              navController.navigate(Screen.SingleChoiceDialog.name + "/${preferenceKey}")
-            }
-            .fillMaxWidth()
-            .padding(start = 40.dp, top = 11.dp, bottom = 11.dp)
-        )
-      }
-    }
-    PreferenceKeys.GENERAL_SHOW_TIME -> {
-      (passwordSettingsState.data[preferenceKey] as TextWithSubtitleWidget?)?.let { state ->
-        TextWithSubtitle(
-          title = state.title,
-          subtitle = state.subtitle,
-          modifier = Modifier
-            .clickable {
-              navController.navigate(Screen.UserInputDialog.name + "/${preferenceKey}")
-            }
-            .fillMaxWidth()
-            .padding(start = 40.dp, top = 11.dp, bottom = 11.dp)
-        )
-      }
-    }
-    PreferenceKeys.SHOW_PASSWORD, PreferenceKeys.COPY_ON_DECRYPT -> {
-      (passwordSettingsState.data[preferenceKey] as CheckboxWithSubtitleWidget?)?.let { state ->
-        state.draw(modifier = Modifier.padding(start = 40.dp, top = 11.dp, bottom = 11.dp, end = 40.dp)) {
-          passwordSettingsStateViewModel.setBooleanToDataStore(preferenceKey, it as Boolean)
+  when (widgetItem.widgetName) {
+    WidgetsNames.PASSWORD_SETTINGS_PASSWORD_GENERATOR_TYPE -> {
+      widgetItem.draw(modifier = Modifier
+        .clickable {
+          navController.navigate(Screen.SingleChoiceDialog.name + "/${widgetItem.widgetName.toPreferenceKey()}")
         }
+        .fillMaxWidth()
+        .padding(start = 40.dp, top = 11.dp, bottom = 11.dp), changeStateInDataStore = {})
+    }
+    WidgetsNames.PASSWORD_SETTINGS_COPY_TIMEOUT -> {
+      widgetItem.draw(modifier = Modifier
+        .clickable {
+          navController.navigate(Screen.UserInputDialog.name + "/${widgetItem.widgetName.toPreferenceKey()}")
+        }
+        .fillMaxWidth()
+        .padding(start = 40.dp, top = 11.dp, bottom = 11.dp), changeStateInDataStore = {})
+    }
+    WidgetsNames.PASSWORD_SETTINGS_COPY_ON_DECRYPT, WidgetsNames.PASSWORD_SETTINGS_SHOW_PASSWORD -> {
+      widgetItem.draw(modifier = Modifier.padding(start = 40.dp, top = 11.dp, bottom = 11.dp, end = 40.dp)) {
+        passwordSettingsStateViewModel.setBooleanToDataStore(widgetItem.widgetName.toPreferenceKey(), it as Boolean)
       }
     }
   }

@@ -6,13 +6,13 @@ import com.martyuk.compose.widget.WidgetItem
 
 @Immutable
 data class PasswordSettingsState(
-  val data: Map<String, WidgetItem>
+  val data: List<WidgetItem>
 ) : UiState {
 
   companion object {
 
     fun initial(): PasswordSettingsState {
-      return PasswordSettingsState(emptyMap())
+      return PasswordSettingsState(emptyList())
     }
   }
 }

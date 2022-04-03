@@ -57,7 +57,6 @@ class UserInputDialogFormatter @Inject constructor(
       }
       PreferenceKeys.GENERAL_SHOW_TIME -> {
         PasswordSettingsUiEvent.Update(
-          key,
           TextWithSubtitleWidget(title, subtitle, widgetName = WidgetsNames.PASSWORD_SETTINGS_COPY_TIMEOUT)
         )
       }

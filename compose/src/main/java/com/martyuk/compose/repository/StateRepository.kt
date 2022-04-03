@@ -20,6 +20,7 @@ import com.martyuk.compose.widget.WidgetsNames.GENERAL_SETTINGS_SORT_ORDER
 import com.martyuk.compose.widget.WidgetsNames.PASSWORD_SETTINGS_COPY_ON_DECRYPT
 import com.martyuk.compose.widget.WidgetsNames.PASSWORD_SETTINGS_COPY_TIMEOUT
 import com.martyuk.compose.widget.WidgetsNames.PASSWORD_SETTINGS_PASSWORD_GENERATOR_TYPE
+import com.martyuk.compose.widget.WidgetsNames.PASSWORD_SETTINGS_SHOW_PASSWORD
 import com.martyuk.compose.widget.WidgetsNames.REPOSITORY_SETTINGS_REBASE_ON_PULL
 import com.martyuk.compose.widget.WidgetsNames.REPOSITORY_SETTINGS_SSH_KEYGEN
 import com.martyuk.utils.extensions.DataStoreManager
@@ -102,35 +103,31 @@ class StateRepository @Inject constructor(
 
   fun getPasswordSettingsState(): PasswordSettingsState {
     return PasswordSettingsState(
-      mapOf(
-        PreferenceKeys.PREF_KEY_PWGEN_TYPE to
-          TextWithSubtitleWidget(
-            widgetName = PASSWORD_SETTINGS_PASSWORD_GENERATOR_TYPE,
-            title = resourcesManager.getString(R.string.pref_password_generator_type_title),
-            subtitle = dataStoreManager.getStringBlocking(PreferenceKeys.PREF_KEY_PWGEN_TYPE)
-              ?: resourcesManager.getStringArray(R.array.pwgen_provider_labels)[0]
-          ),
-        PreferenceKeys.GENERAL_SHOW_TIME to
-          TextWithSubtitleWidget(
-            widgetName = PASSWORD_SETTINGS_COPY_TIMEOUT,
-            title = resourcesManager.getString(R.string.pref_clipboard_timeout_title),
-            subtitle = (dataStoreManager.getStringBlocking(PreferenceKeys.GENERAL_SHOW_TIME)?.toIntOrNull()
-              ?: 45).toString()
-          ),
-        PreferenceKeys.SHOW_PASSWORD to
-          CheckboxWithSubtitleWidget(
-            widgetName = PASSWORD_SETTINGS_COPY_TIMEOUT,
-            title = resourcesManager.getString(R.string.show_password_pref_title),
-            subTitle = resourcesManager.getString(R.string.show_password_pref_summary),
-            isSelected = dataStoreManager.getBooleanBlocking(PreferenceKeys.SHOW_PASSWORD) ?: true
-          ),
-        PreferenceKeys.COPY_ON_DECRYPT to
-          CheckboxWithSubtitleWidget(
-            widgetName = PASSWORD_SETTINGS_COPY_ON_DECRYPT,
-            title = resourcesManager.getString(R.string.pref_copy_title),
-            subTitle = resourcesManager.getString(R.string.pref_copy_summary),
-            isSelected = dataStoreManager.getBooleanBlocking(PreferenceKeys.COPY_ON_DECRYPT) ?: false
-          )
+      listOf(
+        TextWithSubtitleWidget(
+          widgetName = PASSWORD_SETTINGS_PASSWORD_GENERATOR_TYPE,
+          title = resourcesManager.getString(R.string.pref_password_generator_type_title),
+          subtitle = dataStoreManager.getStringBlocking(PreferenceKeys.PREF_KEY_PWGEN_TYPE)
+            ?: resourcesManager.getStringArray(R.array.pwgen_provider_labels)[0]
+        ),
+        TextWithSubtitleWidget(
+          widgetName = PASSWORD_SETTINGS_COPY_TIMEOUT,
+          title = resourcesManager.getString(R.string.pref_clipboard_timeout_title),
+          subtitle = (dataStoreManager.getStringBlocking(PreferenceKeys.GENERAL_SHOW_TIME)?.toIntOrNull()
+            ?: 45).toString()
+        ),
+        CheckboxWithSubtitleWidget(
+          widgetName = PASSWORD_SETTINGS_SHOW_PASSWORD,
+          title = resourcesManager.getString(R.string.show_password_pref_title),
+          subTitle = resourcesManager.getString(R.string.show_password_pref_summary),
+          isSelected = dataStoreManager.getBooleanBlocking(PreferenceKeys.SHOW_PASSWORD) ?: true
+        ),
+        CheckboxWithSubtitleWidget(
+          widgetName = PASSWORD_SETTINGS_COPY_ON_DECRYPT,
+          title = resourcesManager.getString(R.string.pref_copy_title),
+          subTitle = resourcesManager.getString(R.string.pref_copy_summary),
+          isSelected = dataStoreManager.getBooleanBlocking(PreferenceKeys.COPY_ON_DECRYPT) ?: false
+        )
       )
     )
   }

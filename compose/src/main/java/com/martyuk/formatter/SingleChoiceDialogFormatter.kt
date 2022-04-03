@@ -62,17 +62,35 @@ class SingleChoiceDialogFormatter @Inject constructor(
     return when (key) {
       PreferenceKeys.OREO_AUTOFILL_DIRECTORY_STRUCTURE -> {
         AutoFillSettingsUiEvent.Update(
-          TextWithSubtitleWidget(title, subtitle, widgetName = WidgetsNames.AUTOFILL_SETTINGS_PASSWORD_FILE_ORGANISATION)
+          TextWithSubtitleWidget(
+            title = title,
+            subtitle = subtitle,
+            widgetName = WidgetsNames.AUTOFILL_SETTINGS_PASSWORD_FILE_ORGANISATION)
         )
       }
       PreferenceKeys.APP_THEME -> {
-        GeneralSettingsUiEvent.Update(TextWithSubtitleWidget(title, subtitle, widgetName = WidgetsNames.GENERAL_SETTINGS_APP_THEME))
+        GeneralSettingsUiEvent.Update(
+          TextWithSubtitleWidget(
+            title = title,
+            subtitle = subtitle,
+            widgetName = WidgetsNames.GENERAL_SETTINGS_APP_THEME)
+        )
       }
       PreferenceKeys.SORT_ORDER -> {
-        GeneralSettingsUiEvent.Update(TextWithSubtitleWidget(title, subtitle, widgetName = WidgetsNames.GENERAL_SETTINGS_SORT_ORDER))
+        GeneralSettingsUiEvent.Update(
+          TextWithSubtitleWidget(
+            title = title,
+            subtitle = subtitle,
+            widgetName = WidgetsNames.GENERAL_SETTINGS_SORT_ORDER)
+        )
       }
       PreferenceKeys.PREF_KEY_PWGEN_TYPE -> {
-        PasswordSettingsUiEvent.Update(key, TextWithSubtitleWidget(title, subtitle, widgetName = WidgetsNames.PASSWORD_SETTINGS_PASSWORD_GENERATOR_TYPE))
+        PasswordSettingsUiEvent.Update(
+          TextWithSubtitleWidget(
+            title = title,
+            subtitle = subtitle,
+            widgetName = WidgetsNames.PASSWORD_SETTINGS_PASSWORD_GENERATOR_TYPE)
+        )
       }
       else -> throw Exception("")
     }

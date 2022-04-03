@@ -65,6 +65,15 @@ fun String.toPreferenceKey(): String {
     WidgetsNames.PASSWORD_SETTINGS_PASSWORD_GENERATOR_TYPE -> {
       PreferenceKeys.PREF_KEY_PWGEN_TYPE
     }
+    WidgetsNames.PASSWORD_SETTINGS_COPY_TIMEOUT -> {
+      PreferenceKeys.GENERAL_SHOW_TIME
+    }
+    WidgetsNames.PASSWORD_SETTINGS_COPY_ON_DECRYPT -> {
+      PreferenceKeys.COPY_ON_DECRYPT
+    }
+    WidgetsNames.PASSWORD_SETTINGS_SHOW_PASSWORD -> {
+      PreferenceKeys.SHOW_PASSWORD
+    }
     else -> {
       throw Exception("No preference key for $this widget")
     }

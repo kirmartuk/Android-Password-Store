@@ -77,6 +77,7 @@ object WidgetsNames {
   const val PASSWORD_SETTINGS_PASSWORD_GENERATOR_TYPE = "passwordSettingsPasswordGeneratorType"
   const val PASSWORD_SETTINGS_COPY_TIMEOUT = "passwordSettingsCopyTimeout"
   const val PASSWORD_SETTINGS_COPY_ON_DECRYPT = "passwordSettingsCopyOnDecrypt"
+  const val PASSWORD_SETTINGS_SHOW_PASSWORD = "passwordSettingsShowPassword"
   const val GENERAL_SETTINGS_APP_THEME = "generalSettingsAppTheme"
   const val GENERAL_SETTINGS_SORT_ORDER = "generalSettingsSortOrder"
   const val GENERAL_SETTINGS_FILTER_RECURSIVELY = "generalSettingsFilterRecursively"
