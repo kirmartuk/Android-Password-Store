@@ -19,6 +19,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.FragmentActivity
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 
 /** Get an instance of [AutofillManager]. Only available on Android Oreo and above */
 val Context.autofillManager: AutofillManager?
@@ -31,13 +33,11 @@ val Context.isAutofillServiceEnabled: Boolean
 /** Get an instance of [ClipboardManager] */
 val Context.clipboard
   get() = getSystemService<ClipboardManager>()
-/*
-*/
-/** Wrapper for [getEncryptedPrefs] to avoid open-coding the file name at each call site *//*
-fun Context.getEncryptedGitPrefs() = getEncryptedPrefs("git_operation")*/
-/*
-*/
-/** Get an instance of [EncryptedSharedPreferences] with the given [fileName] *//*
+
+/** Wrapper for [getEncryptedPrefs] to avoid open-coding the file name at each call site */
+fun Context.getEncryptedGitPrefs() = getEncryptedPrefs("git_operation")
+
+/** Get an instance of [EncryptedSharedPreferences] with the given [fileName] */
 private fun Context.getEncryptedPrefs(fileName: String): SharedPreferences {
   val masterKeyAlias =
     MasterKey.Builder(applicationContext).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
@@ -48,7 +48,8 @@ private fun Context.getEncryptedPrefs(fileName: String): SharedPreferences {
     EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
     EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
   )
-}*/
+}
+
 /** Get an instance of [KeyguardManager] */
 val Context.keyguardManager: KeyguardManager
   get() = getSystemService()!!
@@ -56,8 +57,8 @@ val Context.keyguardManager: KeyguardManager
 /** Get the default [SharedPreferences] instance */
 val Context.sharedPrefs: SharedPreferences
   get() = getSharedPreferences("${this.packageName}_preferences", 0)
-
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+val Context.sshKeyDataStore: DataStore<Preferences> by preferencesDataStore(name = "androidx_sshkey_keyset_prefs")
 
 /** Resolve [attr] from the [Context]'s theme */
 fun Context.resolveAttribute(attr: Int): Int {

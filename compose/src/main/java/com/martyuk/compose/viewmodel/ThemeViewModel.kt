@@ -1,7 +1,7 @@
 package com.martyuk.compose.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.martyuk.compose.utils.DataStoreManager
+import com.martyuk.utils.extensions.DataStoreManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

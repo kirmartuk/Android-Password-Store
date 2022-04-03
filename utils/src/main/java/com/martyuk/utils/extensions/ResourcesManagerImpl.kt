@@ -1,4 +1,4 @@
-package com.martyuk.compose.utils
+package com.martyuk.utils.extensions
 
 import android.content.res.AssetManager
 import android.content.res.Resources

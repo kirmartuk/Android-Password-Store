@@ -1,8 +1,8 @@
-package com.martyuk.compose.utils
+package com.martyuk.utils.extensions
 
 import kotlinx.coroutines.flow.Flow
 
-interface DataStoreManager {
+interface SshKeyDataStoreManager {
 
   fun observeString(key: String): Flow<String?>
   fun observeInteger(key: String): Flow<Int?>
@@ -14,7 +14,15 @@ interface DataStoreManager {
   suspend fun getIntegerAsync(key: String): Int?
   suspend fun getStringAsync(key: String): String?
 
+  fun setStringBlocking(key: String, value: String)
+  fun setBooleanBlocking(key: String, value: Boolean)
+  fun setIntegerBlocking(key: String, value: Int)
+
   suspend fun setString(key: String, value: String)
   suspend fun setBoolean(key: String, value: Boolean)
   suspend fun setInteger(key: String, value: Int)
+
+  fun remove(key: String)
+
+  fun clear()
 }

@@ -12,7 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.martyuk.compose.utils.DataStoreManager
+import com.martyuk.utils.extensions.DataStoreManager
 import com.martyuk.compose.viewmodel.ThemeViewModel
 import com.martyuk.utils.extensions.PreferenceKeys
 import kotlinx.coroutines.Dispatchers

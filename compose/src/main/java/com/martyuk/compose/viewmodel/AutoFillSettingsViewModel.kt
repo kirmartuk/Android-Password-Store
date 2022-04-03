@@ -5,7 +5,7 @@ import com.martyuk.compose.repository.StateRepository
 import com.martyuk.compose.reducer.AutoFillSettingsReducer
 import com.martyuk.compose.state.AutoFillSettingsState
 import com.martyuk.compose.event.AutoFillSettingsUiEvent
-import com.martyuk.compose.utils.DataStoreManager
+import com.martyuk.utils.extensions.DataStoreManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers

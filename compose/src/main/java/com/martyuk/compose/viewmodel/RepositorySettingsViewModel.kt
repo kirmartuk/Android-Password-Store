@@ -5,7 +5,7 @@ import com.martyuk.compose.event.RepositorySettingsUiEvent
 import com.martyuk.compose.reducer.RepositorySettingsReducer
 import com.martyuk.compose.repository.StateRepository
 import com.martyuk.compose.state.RepositorySettingsState
-import com.martyuk.compose.utils.DataStoreManager
+import com.martyuk.utils.extensions.DataStoreManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers

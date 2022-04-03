@@ -30,7 +30,6 @@ fun File.contains(other: File): Boolean {
   // Direct containment is equivalent to the relative path being equal to the filename.
   return relativePath.path == other.name
 }
-
 /**
  * Checks if this [File] is in the password repository directory as given by
  * [PasswordRepository.getRepositoryDirectory]
@@ -38,10 +37,8 @@ fun File.contains(other: File): Boolean {
 //fun File.isInsideRepository(): Boolean {
 //  return canonicalPath.contains(PasswordRepository.getRepositoryDirectory().canonicalPath)
 //}
-
 /** Recursively lists the files in this [File], skipping any directories it encounters. */
 fun File.listFilesRecursively() = walkTopDown().filter { !it.isDirectory }.toList()
-
 /**
  * Unique SHA-1 hash of this commit as hexadecimal string.
  *
@@ -49,7 +46,6 @@ fun File.listFilesRecursively() = walkTopDown().filter { !it.isDirectory }.toLis
  */
 //val RevCommit.hash: String
 //  get() = ObjectId.toString(id)
-
 /**
  * Time this commit was made with second precision.
  *
@@ -61,7 +57,6 @@ fun File.listFilesRecursively() = walkTopDown().filter { !it.isDirectory }.toLis
 //    val epochMilliseconds = epochSeconds * 1000
 //    return Date(epochMilliseconds)
 //  }
-
 /**
  * Splits this [String] into an [Array] of [String] s, split on the UNIX LF line ending and stripped
  * of any empty lines.
@@ -75,3 +70,6 @@ fun <T> unsafeLazy(initializer: () -> T) = lazy(LazyThreadSafetyMode.NONE) { ini
 
 /** A convenience extension to turn a [Throwable] with a message into a loggable string. */
 fun Throwable.asLog(message: String): String = "$message\n${asLog("")}"
+fun Boolean?.orFalse(): Boolean {
+  return this ?: false
+}

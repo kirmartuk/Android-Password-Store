@@ -5,7 +5,7 @@ import com.martyuk.compose.event.PasswordSettingsUiEvent
 import com.martyuk.compose.reducer.PasswordSettingsReducer
 import com.martyuk.compose.repository.StateRepository
 import com.martyuk.compose.state.PasswordSettingsState
-import com.martyuk.compose.utils.DataStoreManager
+import com.martyuk.utils.extensions.DataStoreManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
